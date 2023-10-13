@@ -1,0 +1,13 @@
+services:
+  trueskill-bot:
+    build:
+      context: .
+    restart: unless-stopped
+    command: ["python", "-u", "/src/main.py"]
+    volumes:
+      - ./:/src
+    user: 1000:1000
+    environment:
+      TZ: Asia/Singapore
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      PROMPTLAYER_API_KEY: ${PROMPTLAYER_API_KEY}

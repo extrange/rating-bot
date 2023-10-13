@@ -6,3 +6,8 @@ pyrogram
 python-dotenv
 tinydb
 trueskill
+shortuuid
+tgcrypto
+uvloop
+openai
+promptlayer

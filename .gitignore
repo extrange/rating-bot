@@ -1,1 +1,4 @@
 /players.json
+.env
+/my_account.session*
+__pycache__
