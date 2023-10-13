@@ -1,6 +1,7 @@
 import itertools
 import math
 import re
+from pathlib import Path
 from typing import Sequence, TypedDict, cast
 
 from langchain.tools import tool
@@ -10,7 +11,7 @@ from tinydb import Query, TinyDB
 from tinydb.table import Document
 from trueskill import Rating, TrueSkill
 
-players = TinyDB('players.json')
+players = TinyDB(Path(__file__).parent / 'players.json')
 env = TrueSkill(backend='mpmath')
 
 

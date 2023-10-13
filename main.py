@@ -1,6 +1,5 @@
 import asyncio
 import logging
-from asyncio import Future
 
 import langchain
 import shortuuid
