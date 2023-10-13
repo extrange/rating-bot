@@ -83,7 +83,7 @@ async def main():
     async def handle_list(client, message: Message):
         await message.reply(f"```{list_players_pretty()}```")
 
-    @app.on_message(filters.text)
+    @app.on_message((filters.private & filters.text) | filters.mentioned)
     async def handle_message(client, message: Message):
         reply = await message.reply("Thinking...")
         agent = get_agent()
