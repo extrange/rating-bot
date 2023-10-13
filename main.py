@@ -40,8 +40,7 @@ def get_agent():
         pl_tags=[run_uuid],
     )
 
-    memory = ConversationBufferMemory(
-        memory_key="chat_history", return_messages=True)
+    memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 
     tools: list[Tool] = [  # type: ignore
         add_player,
@@ -54,8 +53,15 @@ def get_agent():
         tool.handle_tool_error = True
 
     agent = initialize_agent(
-        tools, chat, agent=AgentType.OPENAI_FUNCTIONS, memory=memory, agent_kwargs={
-            "system_message": SystemMessage(content="You are an AI assistant that can help users calculate their ranking for games. If a user does not exist, you should add them first.")}
+        tools,
+        chat,
+        agent=AgentType.OPENAI_FUNCTIONS,
+        memory=memory,
+        agent_kwargs={
+            "system_message": SystemMessage(
+                content="You are an AI assistant that can help users calculate their ranking for games. If a user does not exist, you should add them first."
+            )
+        },
     )
     return agent
 
@@ -63,15 +69,15 @@ def get_agent():
 async def main():
     app = Client("my_account")
 
-    @app.on_message(filters.command("start"))
-    async def handle_start(client, message: Message):
-        await message.reply(
-            """Hi there! I calculate and update rankings for players in badminton (or other) games.
+    intro = """Hi there! I calculate and update rankings for players in badminton (or other) games.
 
             Just tell me the result of a match, e.g. 'Adam and Bob won Cindy and Dave', and I'll do the rest.
 
             You can also ask me to calculate the probability of a team winning another team, list the rankings (/list also works), or add a player, all in natural language."""
-        )
+
+    @app.on_message(filters.command("start") | filters.command("help"))
+    async def handle_start(client, message: Message):
+        await message.reply(intro)
 
     @app.on_message(filters.command("list"))
     async def handle_list(client, message: Message):
@@ -79,14 +85,18 @@ async def main():
 
     @app.on_message(filters.text)
     async def handle_message(client, message: Message):
-        reply = await message.reply('Thinking...')
+        reply = await message.reply("Thinking...")
         agent = get_agent()
-        result = await agent.arun(
-            input=f'{list_players({})}\nRequest: {message.text}')
+        result = await agent.arun(input=f"{list_players({})}\nRequest: {message.text}")
         await reply.edit_text(result)
 
     await app.start()
-    await app.set_bot_commands([BotCommand("list", "Display ranking leaderboard")])
+    await app.set_bot_commands(
+        [
+            BotCommand("list", "Display ranking leaderboard"),
+            BotCommand("help", "Show help"),
+        ]
+    )
     await idle()
     await app.stop()
 
