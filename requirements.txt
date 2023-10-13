@@ -1,0 +1,8 @@
+ipykernel
+langchain
+mpmath
+prettytable
+pyrogram
+python-dotenv
+tinydb
+trueskill
