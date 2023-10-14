@@ -62,7 +62,7 @@ def get_agent():
         memory=memory,
         agent_kwargs={
             "system_message": SystemMessage(
-                content="You are an AI assistant that can help users calculate their ranking for badminton (or other) games, using TrueSkill. If a user does not exist, you should add them first."
+                content="You are an AI assistant that can help users calculate their ranking for badminton (or other) games, using TrueSkill. If a user does not exist in the database, you should add them first using the appropriate function."
             )
         },
     )
@@ -104,10 +104,13 @@ For more information, see [here](https://github.com/extrange/rating-bot).
 
         reply = await message.reply("Thinking...")
         agent = get_agent()
-        result = await agent.arun(
-            input=f"{list_players({})}\nUser's request: {message.text}"
-        )
-        await reply.edit_text(result)
+        try:
+            result = await agent.arun(
+                input=f"{list_players({})}\nUser's request: {message.text}"
+            )
+            await reply.edit_text(result)
+        except Exception as e:
+            await reply.edit_text(f'Oops, encountered an error: {e}')
 
     await app.start()
     await app.set_bot_commands(

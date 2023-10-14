@@ -66,7 +66,7 @@ def list_players_pretty() -> str:
     all_players = players.all()
     all_players.sort(key=lambda p: p["mu"], reverse=True)
     for p in all_players:
-        tbl.add_row([p["name"], f'{p["mu"]:.0f}'])
+        tbl.add_row([p["name"], f'{p["mu"]:.0f} ± {p["sigma"]:.0f}'])
     return tbl.get_string()
     ...
 
