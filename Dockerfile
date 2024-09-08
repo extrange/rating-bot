@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/python:0-3.11
+FROM mcr.microsoft.com/devcontainers/python:1-3.11
 
 # Install requirements
 COPY requirements.txt /tmp/requirements.txt
